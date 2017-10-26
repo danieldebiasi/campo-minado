@@ -1,0 +1,77 @@
+body {
+	font-family: "Segoe UI", "Arial", "sans-serif";
+}
+
+#info {
+	text-align: center;
+	border: 1px solid black;
+	border-radius: 20px;
+}
+
+#info p {
+	display: inline-block;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+#info p .nome {
+	width: 200px;
+}
+
+#info p .numero {
+	width: 40px;
+}
+
+#info p .botao {
+	width: 80px;
+}
+
+#dados {
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	border: 1px solid black;
+	border-radius: 20px;
+	width: 30%;
+}
+
+#dados p {
+	display: inline-block;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+#dados span {
+	font-weight: bold;
+}
+
+#campo {
+
+}
+
+#campo table {
+	border-collapse: collapse;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+}
+
+#campo table tr {
+	height: 45px;
+}
+
+#campo table tr td {
+	border: 1px solid black;
+	border-collapse: collapse;
+	width: 45px;
+	background: gray;
+	transition: 0.5s all;
+}
+
+#campo table tr td img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+

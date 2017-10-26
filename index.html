@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Campo Minado</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="script.js"></script>
+</head>
+<body>
+	<div id="info">
+		<p>Nome do Jogador: <input id="nome" class="nome" type="text" name="nome"></p>
+		<p>Linhas: <input id="x" class="numero" type="number" min="2" name="tamx"></p>
+		<p>Colunas: <input id="y" class="numero" type="number" min="2" name="tamy"></p>
+		<p>Nº de Bombas: <input id="bombas" class="numero" type="number" min="1" name="bombas"></p>
+		<p><input class="botao" type="button" name="novo" value="Novo Jogo" onclick='novoJogo(getElementById("nome").value, getElementById("x").value, getElementById("y").value, getElementById("bombas").value)'></p>
+		<p><input class="botao" type="button" name="mostrar" value="Mostrar" onclick="mostrar()"></p>
+		<p><input class="botao" type="button" name="restaurar" value="Restaurar" onclick="restaurar()"></p>
+	</div>
+
+	<div id="dados">
+		<p>Bombas restantes: <span id="restantes">11/11</span></p>
+		<p>Tempo: <span id="tempo">00:00</span></p>
+	</div>
+
+	<div id="campo"></div>
+
+	<div id="historico"></div>
+</body>
+</html>
