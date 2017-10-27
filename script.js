@@ -5,8 +5,36 @@ var colunas;
 var numBombas;
 var campo;
 var semBomba;
+var totCelulas;
+var tempo;
+var cronometro;
+var partida;
 
 function tempo(){
+
+	//if((totCelulas >= 1)&&partida){
+		clearInterval(cronometro);
+		cronometro = setInterval(function() {
+			if(totCelulas >= 1 && partida){
+	        	var tempo = document.getElementById("tempo").innerHTML;
+	        	tempo = tempo.split(":");
+
+	        	tempo[0] = parseInt(tempo[0]);
+	        	tempo[1] = parseInt(tempo[1]);
+
+	        	if(++tempo[1] == 60){
+	        		tempo[1] = 0;
+	        		tempo[0] += 1;
+	        	}
+
+	        	if(tempo[0] < 10) tempo[0] = "0"+tempo[0];
+	        	if(tempo[1] < 10) tempo[1] = "0"+tempo[1];
+
+	        	document.getElementById("tempo").innerHTML = tempo[0]+":"+tempo[1];
+	    	}
+		}, 1000);		
+	
+	//}
 
 }
 
@@ -90,39 +118,50 @@ true: aberta
 }
 
 function novoJogo(n, x, y, b) {
-	limpar();
+	if(x*y < b) {
+		alert("Número de bombas maior que o número de células!");
+	}else {
+		limpar();
 
-	jogador = n;
-	linhas = x;
-	colunas = y;
-	numBombas = b;
+		jogador = n;
+		linhas = x;
+		colunas = y;
+		numBombas = b;
+		totCelulas = 0;
+		partida = false;
 
-	inicializarCelulas();
+		inicializarCelulas();
 
-	//Criar tabela com as células no HTML
-	var p = document.createElement("table");
-	p.setAttribute("id", "tabela");
-	for(i = 0; i < linhas; i++) {
-		var r = document.createElement("tr");
-		for(var j = 0; j < colunas; j++) {
-			var d = document.createElement("td");
-			d.setAttribute("id", i.toString()+"-"+j.toString());
-			d.setAttribute("onclick", "clickCelula(this.id)");
+		//Criar tabela com as células no HTML
+		var p = document.createElement("table");
+		p.setAttribute("id", "tabela");
+		for(i = 0; i < linhas; i++) {
+			var r = document.createElement("tr");
+			for(var j = 0; j < colunas; j++) {
+				var d = document.createElement("td");
+				d.setAttribute("id", i.toString()+"-"+j.toString());
+				d.setAttribute("onclick", "clickCelula(this.id); tempo();");
 
-			if(campo[i][j].valor != 0) {
-				var img = document.createElement("img");
-				img.setAttribute("src", "imagens/"+campo[i][j].valor.toString()+".png");
-				img.setAttribute("id", "i"+i.toString()+"-"+j.toString());
-				img.style.visibility = "hidden";
-				d.appendChild(img);
+				if(campo[i][j].valor != 0) {
+					var img = document.createElement("img");
+					img.setAttribute("src", "imagens/"+campo[i][j].valor.toString()+".png");
+					img.setAttribute("id", "i"+i.toString()+"-"+j.toString());
+					img.style.visibility = "hidden";
+					d.appendChild(img);
+				}
+
+				r.appendChild(d);
 			}
-
-			r.appendChild(d);
+			p.appendChild(r);
 		}
-		p.appendChild(r);
+		
+		document.getElementById("campo").appendChild(p);
+
+		document.getElementById("restantes").innerHTML = (linhas*colunas-numBombas-totCelulas).toString()+"/"+(linhas*colunas-numBombas).toString();
+
+		document.getElementById("tempo").innerHTML = "00:00";
 	}
-	
-	document.getElementById("campo").appendChild(p);
+
 }
 
 function clickCelula(idCelula) {
@@ -131,8 +170,13 @@ function clickCelula(idCelula) {
 	var coluna = parseInt(coord[1]);
 
 	if(!campo[linha][coluna].estado){
+		partida = true;
 		verificarCelula(linha, coluna);
 	}
+}
+
+function clickFimDeJogo() {
+	alert("Fim de Jogo! Para jogar novamente, clique em 'Novo Jogo'.")
 }
 
 function verificarCelula(i, j) {
@@ -140,6 +184,7 @@ function verificarCelula(i, j) {
 	if(!campo[i][j].estado){
 
 		abrirCelula(i, j);
+		totCelulas++;
 
 		campo[i][j].estado = true;
 
@@ -153,7 +198,22 @@ function verificarCelula(i, j) {
 				}
 			}
 		}
+
+		if(campo[i][j].valor == -1) {
+			partida = false;
+			clearInterval(cronometro);
+			fimDeJogo(false);
+		}
+
 	}
+
+	if((totCelulas == linhas*colunas - numBombas) && campo[i][j].valor != -1) {
+		partida = false;
+		clearInterval(cronometro);
+		fimDeJogo(true);
+	}
+
+	document.getElementById("restantes").innerHTML = (linhas*colunas-numBombas-totCelulas).toString()+"/"+(linhas*colunas-numBombas).toString();
 
 	return;
 }
@@ -183,7 +243,7 @@ function abrirCelula(linha, coluna) {
 
 function fecharCelula(linha, coluna) {
 	var celula = document.getElementById(linha.toString()+"-"+coluna.toString());
-	celula.style.background = "gray";
+	celula.style.background = "#999999";
 
 	if(campo[linha][coluna].valor != 0){
 		var img = document.getElementById("i"+linha.toString()+"-"+coluna.toString());
@@ -206,4 +266,60 @@ function restaurar() {
 				fecharCelula(i, j);
 		}
 	}
+}
+
+function fimDeJogo(vitoria) {
+	var msg;
+
+	if(vitoria) {
+		msg = "Vitória";
+	}else {
+		msg = "Derrota";
+	}
+
+	for(var i = 0; i < linhas; i++) {
+		for(var j = 0; j < linhas; j++) {
+			var celula = document.getElementById(i.toString()+"-"+j.toString());
+			celula.setAttribute("onclick", "clickFimDeJogo()");
+			if((campo[i][j].valor == -1) && (!vitoria))
+				abrirCelula(i, j);
+		}
+	}
+	
+	alert("Fim de Jogo! "+msg);
+
+	var hist = document.createElement("div");
+	var pjogador = document.createElement("p");
+	pjogador.appendChild(document.createTextNode("Jogador: "+jogador));
+	var pdimensoes = document.createElement("p");
+	pdimensoes.appendChild(document.createTextNode("Dimensões: "+linhas.toString()+"x"+colunas.toString()));
+	var pbombas = document.createElement("p");
+	pbombas.appendChild(document.createTextNode("Bombas: "+numBombas.toString()));
+	var ptempo = document.createElement("p");
+	ptempo.appendChild(document.createTextNode("Tempo gasto: "+ document.getElementById("tempo").innerHTML));
+	var pcelulas = document.createElement("p");
+	pcelulas.appendChild(document.createTextNode("Células abertas: "+totCelulas.toString()+" de "+(linhas*colunas).toString()));
+	var presultado = document.createElement("p");
+	var sresultado = document.createElement("span");
+	sresultado.appendChild(document.createTextNode(msg));
+	sresultado.style.fontWeight = "bold";
+	vitoria ? sresultado.style.color = "green" : sresultado.style.color = "red";
+	presultado.appendChild(document.createTextNode("Resultado: "));
+	presultado.appendChild(sresultado);
+
+	hist.appendChild(pjogador);
+	hist.appendChild(pdimensoes);
+	hist.appendChild(pbombas);
+	hist.appendChild(ptempo);
+	hist.appendChild(pcelulas);
+	hist.appendChild(presultado);
+
+	document.getElementById("registros").prepend(hist);
+
+	hist.style.border = "1px solid black";
+	hist.style.borderRadius = "20px";
+	hist.style.marginTop = "20px";
+	hist.style.width = "30%";
+	hist.style.marginRight = "auto";
+	hist.style.marginLeft = "auto";
 }
