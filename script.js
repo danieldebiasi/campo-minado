@@ -12,29 +12,26 @@ var partida;
 
 function tempo(){
 
-	//if((totCelulas >= 1)&&partida){
-		clearInterval(cronometro);
-		cronometro = setInterval(function() {
-			if(totCelulas >= 1 && partida){
-	        	var tempo = document.getElementById("tempo").innerHTML;
-	        	tempo = tempo.split(":");
+	clearInterval(cronometro);
+	cronometro = setInterval(function() {
+		if(totCelulas >= 1 && partida){
+		var tempo = document.getElementById("tempo").innerHTML;
+		tempo = tempo.split(":");
 
-	        	tempo[0] = parseInt(tempo[0]);
-	        	tempo[1] = parseInt(tempo[1]);
+		tempo[0] = parseInt(tempo[0]);
+		tempo[1] = parseInt(tempo[1]);
 
-	        	if(++tempo[1] == 60){
-	        		tempo[1] = 0;
-	        		tempo[0] += 1;
-	        	}
+		if(++tempo[1] == 60){
+			tempo[1] = 0;
+			tempo[0] += 1;
+		}
 
-	        	if(tempo[0] < 10) tempo[0] = "0"+tempo[0];
-	        	if(tempo[1] < 10) tempo[1] = "0"+tempo[1];
+		if(tempo[0] < 10) tempo[0] = "0"+tempo[0];
+		if(tempo[1] < 10) tempo[1] = "0"+tempo[1];
 
-	        	document.getElementById("tempo").innerHTML = tempo[0]+":"+tempo[1];
-	    	}
-		}, 1000);		
-	
-	//}
+		document.getElementById("tempo").innerHTML = tempo[0]+":"+tempo[1];
+	}
+	}, 1000);		
 
 }
 
