@@ -205,7 +205,7 @@ function verificarCelula(i, j) {
 
 	}
 
-	if((totCelulas == linhas*colunas - numBombas) && campo[i][j].valor != -1) {
+	if((totCelulas == linhas*colunas - numBombas) && campo[i][j].valor != -1 && partida) {
 		partida = false;
 		clearInterval(cronometro);
 		fimDeJogo(true);
