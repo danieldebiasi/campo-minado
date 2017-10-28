@@ -3,6 +3,18 @@ body {
 	text-align: center;
 }
 
+#integrantes {
+	border: 1px solid black;
+	border-radius: 20px;
+	margin-bottom: 30px;
+}
+
+#integrantes p {
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
 #info {
 	border: 1px solid black;
 	border-radius: 20px;
